@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
+const mongo_uri = "mongodb+srv://jalamdangi96:59fARtmrbviA86g8@cluster0.hlvru.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/web-scraper"
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/web-scraper", {});
+    await mongoose.connect(mongo_uri, {});
     console.log("MongoDB Connected...");
   } catch (err) {
     console.error(err.message);

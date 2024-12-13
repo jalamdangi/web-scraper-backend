@@ -23,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/screenshots", express.static(path.join(__dirname, "screenshots")));
 
 // Routes
+app.get("/", (req,res)=>res.send("Hello from server !"))
 app.use("/api/companies", companyRoutes);
 
 // Start server
