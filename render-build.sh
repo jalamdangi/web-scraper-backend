@@ -1,14 +1,36 @@
 #!/usr/bin/env bash
 
-# Update package lists
-apt-get update
+set -e  # Exit on any error
+set -o pipefail  # Catch errors in piped commands
 
-# Install Chrome
-apt-get install -y wget unzip
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+# Update package lists
+echo "Updating package lists..."
+apt-get update -y
+
+# Install dependencies for downloading and installing Chrome
+echo "Installing necessary tools..."
+apt-get install -y wget unzip apt-transport-https
+
+# Download Google Chrome
+echo "Downloading Google Chrome..."
+wget -O google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+# Verify the file was downloaded successfully
+if [ ! -f "google-chrome-stable_current_amd64.deb" ]; then
+  echo "Google Chrome download failed. Exiting."
+  exit 1
+fi
+
+# Install Google Chrome
+echo "Installing Google Chrome..."
 apt-get install -y ./google-chrome-stable_current_amd64.deb
 
+# Clean up after installation
+echo "Cleaning up..."
+rm -f google-chrome-stable_current_amd64.deb
+
 # Install Puppeteer dependencies
+echo "Installing Puppeteer dependencies..."
 apt-get install -y \
   ca-certificates \
   fonts-liberation \
@@ -25,3 +47,5 @@ apt-get install -y \
   libxdamage1 \
   libxrandr2 \
   xdg-utils
+
+echo "Installation complete."
