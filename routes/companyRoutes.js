@@ -3,8 +3,7 @@ const router = express.Router();
 const Company = require("../models/Company");
 const cheerio = require("cheerio");
 const axios = require("axios");
-const puppeteer = require("puppeteer-core");
-const chromium = require("chrome-aws-lambda");
+const puppeteer = require("puppeteer");
 
 // Scrape and Save Company Data
 router.post("/scrape", async (req, res) => {
@@ -29,15 +28,11 @@ router.post("/scrape", async (req, res) => {
     const email = $("a[href^='mailto:']").attr("href")?.replace("mailto:", "") || "";
 
     // Puppeteer for Screenshot
-    const browser = await puppeteer.launch({
-      executablePath: await chromium.executablePath,
-      args: chromium.args,
-      headless: chromium.headless,
-      defaultViewport: chromium.defaultViewport,
-    });
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: "networkidle2" });
-    const screenshot = await page.screenshot({ encoding: "base64" }); // Save screenshot as Base64
+    const screenshot = `screenshots/${Date.now()}.png`;
+    await page.screenshot({ path: screenshot });
     await browser.close();
 
     // Save to DB
@@ -52,7 +47,7 @@ router.post("/scrape", async (req, res) => {
       address,
       phone,
       email,
-      screenshot, // Save Base64 screenshot to the database
+      screenshot,
     });
     await company.save();
 

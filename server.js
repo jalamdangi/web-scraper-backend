@@ -5,6 +5,9 @@ const connectDB = require("./config/db");
 const companyRoutes = require("./routes/companyRoutes");
 const path = require("path");
 
+// Load environment variables
+// require("dotenv").config();
+
 // Initialize app
 const app = express();
 
@@ -20,8 +23,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/screenshots", express.static(path.join(__dirname, "screenshots")));
 
 // Routes
-app.get("/", (req, res) => res.send("Welcome to the web scraper server!"));
 app.use("/api/companies", companyRoutes);
 
-// Export the app for Vercel to use
-module.exports = app;
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
